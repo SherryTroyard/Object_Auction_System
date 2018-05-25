@@ -12,6 +12,7 @@
 #include <time.h>
 #define N 1000
 #define M 100
+#define modalao true
 //需补充清空界面
 //文件操作需完善
 
