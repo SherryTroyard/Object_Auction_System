@@ -9,8 +9,8 @@
 #include <map>
 #include <utility>
 #include <iomanip>
-#include <time.h>
-#define N 1000
+#include <ctime>
+#define N 100
 #define M 100
 //需补充清空界面
 //文件操作需完善
@@ -70,6 +70,7 @@ typedef struct auction
     int buyer;
     //int buy[20];
     double fin;
+    int flag;
 }auc;
 
 typedef struct account
@@ -519,6 +520,7 @@ void loadAUC()
         in >> AUC[i].time[5];
         in >> AUC[i].buyer;
         in >> AUC[i].fin;
+        in >> AUC[i].flag;
         qua = max(qua, AUC[i].ordin);
         if(AUC[i].name.empty()) break;
     }
@@ -538,7 +540,8 @@ void outAUC()
             out << AUC[i].name << " " << AUC[i].Uord << " " << AUC[i].sta << " " << AUC[i].type
                 << " " << AUC[i].dcr << " " << AUC[i].price <<  " " << AUC[i].ordin <<  " " << AUC[i].whe << " "
                 << AUC[i].time[0] << " " << AUC[i].time[1] << " " << AUC[i].time[2] << " " << AUC[i].time[3]
-                << " " << AUC[i].time[4] << " " << AUC[i].time[5] << " " << AUC[i].buyer << " " << AUC[i].fin << endl;
+                << " " << AUC[i].time[4] << " " << AUC[i].time[5] << " " << AUC[i].buyer << " " << AUC[i].fin
+                << " " << AUC[i].flag << endl;
     }
     out.close();
 }
@@ -546,6 +549,7 @@ void outAUC()
 void Home()
 {
     loadAUC();
+    //cout << who << endl;
     cout << ACT[who].Uname << "，欢迎回来！您的余额为：￥" << ACT[who].money << endl;
     printf("\n");
     printf("      @@@@@@` #@@@@@'@@@@@@@@@@@@  @@@@@@@@         #@@@@@#@@     #@@@@@:   @@@@;     @@@@#@@@@@@@@@@@@\n");
@@ -745,7 +749,7 @@ void entry()
     cin >> pr;
     ++qua;
     fp << n << " " << who << " " << st << " " << ty << " " << d << " " << pr << " " << qua
-       << " 0 0 0 0 0 0 0 0 0" << endl;
+       << " 0 0 0 0 0 0 0 0 0 0" << endl;
     fp.close();
     cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
     getch();
@@ -784,6 +788,8 @@ void modif()
                 cin >> d_;
                 AUC[i].dcr = d_;
                 cout << "\tⅣ.物品估价：";
+                cin >> p_;
+                AUC[i].price = p_;
                 outAUC();
                 break;
             }
@@ -831,6 +837,7 @@ void del()
                     AUC[j].time[5] = AUC[j + 1].time[5];
                     AUC[j].buyer = AUC[j + 1].buyer;
                     AUC[j].fin = AUC[j + 1].fin;
+                    AUC[j].flag = AUC[j + 1].flag;
                 }
                 outAUC();
             }
@@ -1248,14 +1255,14 @@ void sts()
             if(AUC[i].whe == 2)
                 cnt3++;
         }
-        if(AUC[i].buyer == who){
+        if(who == AUC[i].buyer){
             cnt4++;
         }
     }
     cout << "未卖出物品数：" << cnt1 << endl
          << endl << "竞价中物品数：" << cnt2 << endl
          << endl << "已卖出物品数：" << cnt3 << endl
-         << endl << "成功竞拍物品数：" << cnt3 << endl
+         << endl << "成功竞拍物品数：" << cnt4 << endl
          << endl;
     cout << endl << "按Enter键返回上级菜单" << endl;
     getch();
@@ -1265,22 +1272,23 @@ void sts()
 
 void view()
 {
-    //Asys();
+    Asys();
     loadAUC();
     cout << endl;
     for(int i = 0; i < N; i++){
         if(AUC[i].name.empty()) break;
-        cout << "\t\t\t\t\t\t用户编号：" << setw(4) << setfill('0') << AUC[i].Uord << endl
-             << "\t\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
-             << "\t\t\t\t\t\t物品名称：" << AUC[i].name << endl
-             << "\t\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
-             << "\t\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
-             << "\t\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
-             << "\t\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
-             << "\t\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl
-             << "\t\t\t\t\t\t拍得者：" << ACT[AUC[i].buyer].Uname << endl
-             << "\t\t\t\t\t\t拍得价：" << AUC[i].fin << endl
-             << endl;
+        cout << "\t\t\t\t\t用户编号：" << setw(4) << setfill('0') << AUC[i].Uord << endl
+             << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+             << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+             << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+             << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+             << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+             << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
+             << "\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl
+             << "\t\t\t\t\t拍得者：" << ACT[AUC[i].buyer].Uname << endl
+             << "\t\t\t\t\t拍得价：" << AUC[i].fin << endl;
+        printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
+                   AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
     }
     cout << endl << "请按Enter键返回。" << endl;
     getch();
@@ -1298,14 +1306,14 @@ void Aview()
         if(AUC[i].Uord == who) continue;
         if(AUC[i].whe == 1){
             //cout << "\t\t\t\t\t\t用户编号：" << setw(4) << setfill('0') << AUC[i].Uord << endl
-            cout << "\t\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
-                 << "\t\t\t\t\t\t物品名称：" << AUC[i].name << endl
-                 << "\t\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
-                 << "\t\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
-                 << "\t\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
-                 << "\t\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
-                 << "\t\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl;
-            printf("\t\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
+            cout << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+                 << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+                 << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+                 << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+                 << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+                 << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
+                 << "\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl;
+            printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
                    AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
             cout << endl;
             f = 1;
@@ -1385,27 +1393,6 @@ void Aview()
     getch();
     system("cls");
     sech();
-}
-
-void Asys()
-{
-    loadAUC();
-    double MAX = 0;
-    time_t now;
-    struct tm *local;
-    for(int i = 0; i <= qua; i++){
-        time(&now);
-        local = localtime(&now);
-        if(AUC[i].whe == 1){
-            if(local->tm_year + 1990 >= AUC[i].time[0] && local->tm_mon + 1 >= AUC[i].time[1] &&
-               local->tm_mday >= AUC[i].time[2] && local->tm_hour >= AUC[i].time[3] &&
-               local->tm_min >= AUC[i].time[4] && local->tm_sec >= AUC[i].time[5])
-                AUC[i].whe = 2;
-            //else if()
-        }
-    }
-    outAUC();
-    loadAUC();
 }
 
 void Asys1(int n)
@@ -1500,4 +1487,76 @@ void regisP()
     printf("\n");
 }
 
+void Asys()
+{
+    loadAUC();
+    double MAX = 0;
+    time_t now;
+    struct tm *local;
+    //cout << qua << endl <<endl;
+    for(int i = 0; i < qua; i++){
+        time(&now);
+        local = localtime(&now);
+        //cout << local->tm_year + 1900 << " " << local->tm_mon + 1 << " " << local->tm_mday << " "
+             //<< local->tm_hour << " " <<local->tm_min << " " << local->tm_sec << endl << endl;
+        if(AUC[i].whe == 1){
+                /*
+            if(local->tm_year + 1900 >= AUC[i].time[0] && local->tm_mon + 1 >= AUC[i].time[1] &&
+               local->tm_mday >= AUC[i].time[2] && local->tm_hour >= AUC[i].time[3] &&
+               local->tm_min >= AUC[i].time[4] && local->tm_sec >= AUC[i].time[5])
+                AUC[i].whe = 2;*/
+                if(local->tm_year+1900==AUC[i].time[0]) {
+                if(local->tm_mon+1==AUC[i].time[1]) {
+                    if(local->tm_mday==AUC[i].time[2]) {
+                        if(local->tm_hour==AUC[i].time[3]) {
+                            if(local->tm_min==AUC[i].time[4]) {
+                                if(local->tm_sec>=AUC[i].time[5])
+                                    AUC[i].whe=2;
+                            } else if(local->tm_min>AUC[i].time[4])
+                                AUC[i].whe=2;
+                        } else if(local->tm_hour>AUC[i].time[3])
+                            AUC[i].whe=2;
+                    } else if(local->tm_mday>AUC[i].time[2])
+                        AUC[i].whe=2;
+                } else if(local->tm_mon+1>AUC[i].time[1])
+                    AUC[i].whe=2;
+            } else if(local->tm_year+1990>AUC[i].time[0])
+                AUC[i].whe=2;
+        }
+        //cout << "$" << AUC[i].whe << endl;
+    }
+    outAUC();
+    loadAUC();
+    //
+    //cout << endl;
+    for(int i = 0; i < qua; i++){
+        //cout << AUC[i].whe << endl;
+        if(AUC[i].whe == 2){
+            for(int j = 0; j < M; j++) {
+                if(OBJ[j].Ordin == AUC[i].ordin)
+                    MAX = max(MAX, OBJ[j].Price);
+            }
+            //cout << i << " " << MAX << "\n";
+            AUC[i].fin = MAX;
+            //cout << "*" << i << " " << AUC[i].fin << "\n";
+            for(int j = 0; j < M; j++) {
+                if(OBJ[j].Price == MAX){
+                    AUC[i].buyer = OBJ[j].Who;
+                    if(AUC[i].flag == 0){
+                        ACT[AUC[i].buyer].money -= MAX;
+                        AUC[i].flag = 1;
+                    }
+                    break;
+                }
+                //cout << i << " " << AUC[i].buyer << " " << OBJ[j].Who << "\n";
+            //break;
+            }
+        MAX = 0;
+        }
+    }
+    outAUC();
+    loadAUC();
+    outACT();
+    loadACT();
+}
 
