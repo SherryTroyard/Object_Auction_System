@@ -1389,129 +1389,25 @@ void Aview()
 
 void Asys()
 {
+    loadAUC();
+    double MAX = 0;
+    time_t now;
     struct tm *local;
-    double MAX = 0;
-    int k;
-    for(int i = 0; i < qua; i++){
-        time(&nowtime);
-        local = localtime(&nowtime);
-        if(AUC[i].whe == 1) {
-            if(local->tm_year + 1990 == AUC[i].time[0]) {
-                if(local->tm_mon+1 == AUC[i].time[1]) {
-                    if(local->tm_mday == AUC[i].time[2]) {
-                        if(local->tm_hour == AUC[i].time[3]) {
-                            if(local->tm_min == AUC[i].time[4]) {
-                                if(local->tm_sec >= AUC[i].time[5]) {
-                                    AUC[i].whe = 2;
-                                } else if(local->tm_min > AUC[i].time[4]) {
-                                    AUC[i].whe = 2;
-                                }
-                            } else if(local->tm_hour > AUC[i].time[3]) {
-                                AUC[i].whe = 2;
-                            }
-                        } else if(local->tm_mday > AUC[i].time[2]) {
-                            AUC[i].whe = 2;
-                        }
-                    } else if(local->tm_mon+1 > AUC[i].time[1]) {
-                        AUC[i].whe = 2;
-                    }
-                } else if(local->tm_year + 1990 > AUC[i].time[0]) {
-                    AUC[i].whe = 2;
-                }
-            }
-        }
-        outAUC();
-        loadAUC();
-        //outACT();
-  }/*
-    for(int i = 0; i < qua; i++) {
-        if(AUC[i].whe == 2) {
-            for(int j = 0; j < M; j++) {
-                if(OBJ[i].Ordin == AUC[i].ordin)
-                    MAX = max(MAX, OBJ[i].Price);
-            }
-            AUC[i].fin = MAX;
-            for(int j = 0; j < M; j++) {
-                if(OBJ[j].Price == MAX) {
-                    AUC[i].buyer = OBJ[j].Who;
-                    ACT[AUC[i].buyer].money -= MAX;
-                }
-                break;
-            }
+    for(int i = 0; i <= qua; i++){
+        time(&now);
+        local = localtime(&now);
+        if(AUC[i].whe == 1){
+            if(local->tm_year + 1990 >= AUC[i].time[0] && local->tm_mon + 1 >= AUC[i].time[1] &&
+               local->tm_mday >= AUC[i].time[2] && local->tm_hour >= AUC[i].time[3] &&
+               local->tm_min >= AUC[i].time[4] && local->tm_sec >= AUC[i].time[5])
+                AUC[i].whe = 2;
+            //else if()
         }
     }
     outAUC();
     loadAUC();
-    outACT();
-    loadACT();*/
 }
-/*
-void Asys()
-{
-    loadAUC();
-    double MAX = 0;
-    time_t ti;
-    struct tm *timeinfo;
-    for(int i=0;i<qua;i++)
-    {
-        time(&ti);
-        timeinfo=localtime(&ti);
-        if(AUC[i].whe == 1)
-        {
-            if(timeinfo->tm_year+1990==AUC[i].time[0])
-        {
-            if(timeinfo->tm_mon+1==AUC[i].time[1])
-            {
-                if(timeinfo->tm_mday==AUC[i].time[2])
-                {
-                   if(timeinfo->tm_hour==AUC[i].time[3])
-                   {
-                       if(timeinfo->tm_min==AUC[i].time[4])
-                       {
-                           if(timeinfo->tm_sec>=AUC[i].time[5])
-                               AUC[i].whe=2;
-                       }
-                       else
-                        if(timeinfo->tm_min>AUC[i].time[4]) AUC[i].whe=2;
-                   }
-                   else
-                    if(timeinfo->tm_hour>AUC[i].time[3]) AUC[i].whe=2;
-                }
-                else
-                    if(timeinfo->tm_mday>AUC[i].time[2]) AUC[i].whe=2;
-            }
-             else
-                if(timeinfo->tm_mon+1>AUC[i].time[1]) AUC[i].whe=2;
-        }
-        else
-            if(timeinfo->tm_year+1990>AUC[i].time[0]) AUC[i].whe=2;
-        }
-        //cout << i << endl;
-    outAUC();
-    loadAUC();
-  }
-    for(int i = 0; i < qua; i++) {
-        if(AUC[i].whe == 2) {
-            for(int j = 0; j < M; j++) {
-                if(OBJ[i].Ordin == AUC[i].ordin)
-                    MAX = max(MAX, OBJ[i].Price);
-            }
-            AUC[i].fin = MAX;
-            for(int j = 0; j < M; j++) {
-                if(OBJ[j].Price == MAX){
-                    AUC[i].buyer = OBJ[j].Who;
-                    ACT[AUC[i].buyer].money -= MAX;
-                }
-            break;
-            }
-        }
-    }
-    outAUC();
-    loadAUC();
-    outACT();
-    loadACT();
-}
-*/
+
 void Asys1(int n)
 {
     cout << endl << "\t\t\t拍卖流程：" << endl << "\t\t\t竞拍者\t\t出价" << endl;
