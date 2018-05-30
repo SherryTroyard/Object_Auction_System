@@ -616,9 +616,8 @@ void show()
 {
     loadAUC();
     int f = 0;
-   // int l = 0, h = N, mid;
+    double mn;
     cout << endl;
-    //cout << "\t物品编号\t物品名称\t新旧程度\t物品类型\t物品描述\t物品估价" << endl;
     for(int i = 0; i < N; i++){
         if(AUC[i].Uord == who){
             cout << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
@@ -638,52 +637,71 @@ void show()
         c = getch();
         loadAUC();
         if(c == 'S') {
+            if(ACT[who].money == 0) {
+                cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
+                getch();
+                system("cls");
+                mine();
+            }
+        else{
             cout << endl << "\t\t\t\t请输入物品编号：";
             int s, a;
-            cin >> s;//cout<<s<<endl;
+            cin >> s;
             int l = 0, h = qua, mid;
             while(l <= h) {
                 mid = (l + h)/2;
                 if(s == AUC[mid].ordin) {
                     a = mid;
-                    //cout << a << endl;
                     break;
                 } else if(s < AUC[mid].ordin)
                     h = mid - 1;
                 else
                     l = mid + 1;
-            }/*
-            for(int i = 0; i < qua; i++){
-                if(AUC[i].ordin == s){
-                    cout << "&"<<i <<endl;
-                    a = i;
-                }
-
-                break;
-            }*/
-            //cout << a << endl;
-            if(AUC[a].whe == 0) {
-                AUC[a].whe = 1;
-                cout << "\t\t请输入物品竞拍截止日期：（如2018-05-20-23:59:59）：";
-                scanf("%d-%d-%d-%d:%d:%d", &AUC[a].time[0],&AUC[a].time[1],&AUC[a].time[2],
-                      &AUC[a].time[3],&AUC[a].time[4],&AUC[a].time[5]);
-                cout << "\t\t\t\t*提交成功！*" << endl;
-                ofstream out;
-                out.open("Obj.txt", ios::trunc);
-                out.close();
-                out.open("Obj.txt", ios::app);
-                for(int i = 0; i < N; i++) {
-                    if(AUC[i].name.empty())
-                        break;
-                    else
-                        out << AUC[i].name << " " << AUC[i].Uord << " " << AUC[i].sta << " " << AUC[i].type
-                            << " " << AUC[i].dcr << " " << AUC[i].price <<  " " << AUC[i].ordin <<  " " << AUC[i].whe << " "
-                            << AUC[i].time[0] << " " << AUC[i].time[1] << " " << AUC[i].time[2] << " " << AUC[i].time[3]
-                            << " " << AUC[i].time[4] << " " << AUC[i].time[5] << " " << AUC[i].buyer << endl;
-                }
-                out.close();
-                loadAUC();
-            } else if(AUC[a].whe == 1)
+            }
+            if(AUC[a].whe == 0){
+                    mn = 0.2*AUC[a].price;
+                    cout << endl << "\t\t\t\t你需要支付" << mn << "元（起始竞拍价的20%）作为佣金" << endl
+                         << "\t\t\t\t确认请按Y，返回菜单请按ESC" << endl;  //重新输入估价请按A+Enter，
+                    c = getch();
+                    if(c == 'Y') {
+                        if(ACT[who].money >= mn) {
+                            ACT[who].money -= mn;
+                            ofstream out;
+                            out.open("Un.txt", ios::trunc);
+                            out.close();
+                            out.open("Un.txt", ios::app);
+                            for(int i = 1; i < M; i++) {
+                                if(ACT[i].Uname.empty())
+                                    break;
+                                else
+                                    out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+                            }
+                            out.close();
+                            loadACT();
+                            AUC[a].whe = 1;
+                            cout << "\t\t请输入物品竞拍截止日期：（如2018-05-20-23:59:59）：";
+                            scanf("%d-%d-%d-%d:%d:%d", &AUC[a].time[0],&AUC[a].time[1],&AUC[a].time[2],
+                                  &AUC[a].time[3],&AUC[a].time[4],&AUC[a].time[5]);
+                            cout << "\t\t\t\t*提交成功！*" << endl;
+                            outAUC();
+                            loadAUC();
+                            cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
+                            getch();
+                            system("cls");
+                            mine();
+                        } else {
+                            cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
+                            getch();
+                            system("cls");
+                            mine();
+                        }
+                    }
+                    if(c == 27) {
+                        system("cls");
+                        mine();
+                    }
+            }
+            else if(AUC[a].whe == 1)
                 cout << "\t\t\t\t物品已处于拍卖状态！" << endl;
             else
                 cout << "\t\t\t\t物品已卖出！" << endl;
@@ -691,9 +709,9 @@ void show()
             getch();
             system("cls");
             mine();
+            }
         }
         if(c == 27) {
-            //getch();
             system("cls");
             mine();
         }
@@ -715,63 +733,24 @@ void entry()
     int st, ty;
     char cho;
     double pr, mn;
-    if(ACT[who].money == 0){
-        cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
-            getch();
-            system("cls");
-            center();
-    }
-    else{
-        cout << endl << "\t\t\t\t物品名称：";
-        cin >> n;
-        cout << endl << "\t\t\t\t物品的新旧程度(0-100)：";
-        cin >> st;
-        cout << endl << "\t\t\t\t物品类型（Ⅰ.电子产品；Ⅱ.生活用品；Ⅲ.食品；Ⅳ.工艺品；Ⅴ.其他）：";
-        cin >> ty;
-        cout << endl << "\t\t\t\t物品描述：";
-        cin >> d;
-        cout << endl << "\t\t\t\t对物品的估价（将作为起始竞拍价/￥）：";
-        cin >> pr;
-        mn = 0.2*pr;
-        cout << endl << "\t\t\t\t你需要支付" << mn << "元（起始竞拍价的20%）作为佣金" << endl
-             << "\t\t\t\t确认请按Y，返回菜单请按ESC" << endl;  //重新输入估价请按A+Enter，
-        cho = getch();
-        if(cho == 'Y') {
-            if(ACT[who].money >= mn) {
-                ++qua;
-                fp << n << " " << who << " " << st << " " << ty << " " << d << " " << pr << " " << qua
-                   << " 0 0 0 0 0 0 0 0 0" << endl;
-                fp.close();
-                ACT[who].money -= mn;
-                ofstream out;
-                out.open("Un.txt", ios::trunc);
-                out.close();
-                out.open("Un.txt", ios::app);
-                for(int i = 1; i < M; i++) {
-                    if(ACT[i].Uname.empty())
-                        break;
-                    else
-                        out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
-                }
-                out.close();
-                loadACT();
-                cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
-                getch();
-                system("cls");
-                center();
-            } else {
-                cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
-                getch();
-                system("cls");
-                center();
-            }
-        }
-        if(cho == 27) {
-            //getch();
-            system("cls");
-            center();
-        }
-    }
+    cout << endl << "\t\t\t\t物品名称：";
+    cin >> n;
+    cout << endl << "\t\t\t\t物品的新旧程度(0-100)：";
+    cin >> st;
+    cout << endl << "\t\t\t\t物品类型（Ⅰ.电子产品；Ⅱ.生活用品；Ⅲ.食品；Ⅳ.工艺品；Ⅴ.其他）：";
+    cin >> ty;
+    cout << endl << "\t\t\t\t物品描述：";
+    cin >> d;
+    cout << endl << "\t\t\t\t对物品的估价（将作为起始竞拍价/￥）：";
+    cin >> pr;
+    ++qua;
+    fp << n << " " << who << " " << st << " " << ty << " " << d << " " << pr << " " << qua
+       << " 0 0 0 0 0 0 0 0 0" << endl;
+    fp.close();
+    cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
+    getch();
+    system("cls");
+    center();
 }
 
 void modif()
@@ -792,7 +771,7 @@ void modif()
                 break;
             }
             else{
-                cout << "请修改：" << "Ⅰ.物品名称";
+                cout << "请修改：" << "Ⅰ.物品名称：";
                 cin >> n_;
                 AUC[i].name = n_;
                 cout << "\tⅡ.物品的新旧程度(0-100):";
@@ -804,19 +783,7 @@ void modif()
                 cout << "\tⅢ.物品描述：";
                 cin >> d_;
                 AUC[i].dcr = d_;
-                cout << "\tⅣ.物品估价：" << endl;
-                cout << "\t（注意：若低于原估价，无需再付佣金；高于则系统将收取多出部分的佣金）：";
-                cin >> p_;
-                if(p_ <= AUC[i].price)
-                    AUC[i].price = p_;
-                else {
-                    m = (p_ - AUC[i].price)*0.2;
-                    AUC[i].price = p_;
-                    cout << "需多收取佣金"  << m << "元" << endl << endl;
-                    ACT[who].money -= m;
-                    outACT();
-                    loadACT();
-                }
+                cout << "\tⅣ.物品估价：";
                 outAUC();
                 break;
             }
@@ -850,18 +817,22 @@ void del()
                 for(int j = i; j < N - 1; j++) {
                     AUC[j].name = AUC[j + 1].name;
                     AUC[j].sta = AUC[j + 1].sta;  //status
-                    AUC[j].type = AUC[j + 1].type;       //delete后s[type]显示不出来
+                    AUC[j].type = AUC[j + 1].type;
                     AUC[j].dcr = AUC[j + 1].dcr;  //description
                     AUC[j].price = AUC[j + 1].price;
                     AUC[j].Uord = AUC[j + 1].Uord;  //username order
                     AUC[j].ordin = AUC[j + 1].ordin; //ordinal
-                    //int sum;
-                    //int suc;
+                    AUC[j].whe = AUC[j + 1].whe;
+                    AUC[j].time[0] = AUC[j + 1].time[0];
+                    AUC[j].time[1] = AUC[j + 1].time[1];
+                    AUC[j].time[2] = AUC[j + 1].time[2];
+                    AUC[j].time[3] = AUC[j + 1].time[3];
+                    AUC[j].time[4] = AUC[j + 1].time[4];
+                    AUC[j].time[5] = AUC[j + 1].time[5];
+                    AUC[j].buyer = AUC[j + 1].buyer;
+                    AUC[j].fin = AUC[j + 1].fin;
                 }
                 outAUC();
-                ACT[who].money +=t;
-                cout << endl << "\t\t\t\t*佣金已返还*" << endl;
-                outACT();
             }
         }
     }
