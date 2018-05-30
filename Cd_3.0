@@ -34,7 +34,6 @@ void entry();
 void modif();  //modify
 void del();  //delete
 void sech();  //search object
-//void mine();
 void show2();
 void Bsech1();  //二分查找
 void sech2();
@@ -65,11 +64,9 @@ typedef struct auction
     int Uord;  //username order
     int ordin; //ordinal
     int type;
-    //int suc; //successful 是否竞拍成功
     int time[6];
     int whe;  //是否被拍卖
     int buyer;
-    //int buy[20];
     double fin;
     int flag;
 }auc;
@@ -79,7 +76,6 @@ typedef struct account
     string Uname;  //Username
     string pass;  //password
     string ID;
-    //int Sum;
     double money;
 }act;
 
@@ -96,7 +92,6 @@ obj OBJ[M];
 act ACT[M];  // the 0 is useless and the 1 is the admin
 int qua = 0; //quantity
 int cnt = 0;
-//double MAX = 0;
 int who;
 int T[6];
 string ad;
@@ -104,7 +99,6 @@ map <string, int> m; //查重
 map <int, string> s;
 map <int, string> w;
 time_t nowtime;
-//struct tm *local;
 
 int main()
 {
@@ -249,6 +243,11 @@ void login()
         if(c == 13){
             system("cls");
             login();
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            system("cls");
+            Inter();
         }
     }
 }
@@ -426,6 +425,12 @@ void Admin1()
                 system("cls");
                 Admin0();
             }
+            else {
+                cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                getch();
+                system("cls");
+                Admin0();
+            }
         }
     }
     if(!f){
@@ -473,12 +478,18 @@ void Admin2()
             }
             out.close();
             loadACT();
-            cout << "                                             充值完成，请按Enter键返回上级菜单。" << endl;
+            cout << "                                             *充值完成，请按Enter键返回上级菜单*" << endl;
             getch();
             system("cls");
             Admin0();
         }
         if(c == 27) {
+            system("cls");
+            Admin0();
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
             system("cls");
             Admin0();
         }
@@ -488,11 +499,15 @@ void Admin2()
 void Admin3()
 {
     loadACT();
-    cout << endl << "用户编号" << "    " << "用户名" << "    " << "用户密码" << "        " << "用户余额" << endl;
+    cout.fill(' ');
+    cout << endl << setw(20) << left << "用户编号" << setw(20) << left << "用户名"
+    << setw(20) << left << "用户密码" << setw(30) << left << "用户余额" << endl;
     for(int i = 1; i < M; i++){
         if(ACT[i].Uname.empty()) break;
-        cout << setw(4) << setfill('0') << i << "\t    "
-             << ACT[i].Uname << "\t      " << ACT[i].pass << "\t      " << ACT[i].money << endl;
+        cout << right << setw(4) << setfill('0') << i;
+        cout.fill(' ');
+        cout << setw(20) << right << ACT[i].Uname << setw(23) << right << ACT[i].pass
+             << setw(20) << right << ACT[i].money << endl;
     }
     cout << endl << "请按Enter键返回。" << endl;
     getch();
@@ -708,6 +723,12 @@ void show()
                         system("cls");
                         center();
                     }
+                    else {
+                        cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                        getch();
+                        system("cls");
+                        center();
+                    }
             }
             else if(AUC[a].whe == 1)
                 cout << "\t\t\t\t物品已处于拍卖状态！" << endl;
@@ -720,6 +741,12 @@ void show()
             }
         }
         if(c == 27) {
+            system("cls");
+            center();
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
             system("cls");
             center();
         }
@@ -898,11 +925,15 @@ void sech() //实际竞拍页面
 void show2()
 {
     loadAUC();
-    cout << endl << "物品编号\t物品名称\t新旧程度\t物品类型\t物品描述\t\t物品估价" << endl;
+    cout.fill(' ');
+    cout << endl << setw(10) << left << "物品编号" << setw(15) << left << "物品名称" << setw(10) << left
+         << "新旧程度" << setw(10) << left << "物品类型"<< setw(20) << left << "物品描述"
+         << setw(10) << left << "物品估价" << endl;
     for(int i = 0; i < qua; i++) {
         if(AUC[i].buyer == who) {
-            cout << AUC[i].ordin << "\t\t" << AUC[i].name << "\t\t" << AUC[i].sta << "\t\t" << AUC[i].type
-                 << "\t\t" << AUC[i].dcr << "\t\t" << AUC[i].price << endl;
+            cout << setw(10) << left << AUC[i].ordin << setw(15) << left << AUC[i].name
+                 << setw(10) << left << AUC[i].sta << setw(10) << left << AUC[i].type
+                 << setw(20) << left << AUC[i].dcr << setw(10) << left << AUC[i].price << endl;
         }
     }
     cout << endl << "按Enter键返回上级菜单" << endl;
@@ -1008,7 +1039,12 @@ void Bsech1()
             if(c == 27) {
                 //getch();
                 system("cls");
-
+                sech();
+            }
+            else {
+                cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                getch();
+                system("cls");
                 sech();
             }
         }
@@ -1126,7 +1162,12 @@ void sech2()
                 sech();
             }
         }
-
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            sech();
+        }
     }
 }
 
@@ -1234,7 +1275,12 @@ void sech3()
                 sech();
             }
         }
-
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            sech();
+        }
     }
 }
 
@@ -1256,9 +1302,9 @@ void sts()
             cnt4++;
         }
     }
-    cout << endl <<"\t\t\t\t\t未卖出物品数：" << cnt1 << endl
+    cout << endl <<"\t\t\t\t\t未拍出物品数：" << cnt1 << endl
          << endl << "\t\t\t\t\t竞价中物品数：" << cnt2 << endl
-         << endl << "\t\t\t\t\t已卖出物品数：" << cnt3 << endl
+         << endl << "\t\t\t\t\t已拍出物品数：" << cnt3 << endl
          << endl << "\t\t\t\t\t成功竞拍物品数：" << cnt4 << endl
          << endl;
     cout << endl << "\t\t\t\t\t*按Enter键返回上级菜单*" << endl;
@@ -1382,6 +1428,18 @@ void Aview()
                 system("cls");
                 sech();
             }
+            else {
+                cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                getch();
+                system("cls");
+                sech();
+            }
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            sech();
         }
     }
         //cout << endl << "请按Enter键返回。" << endl;
@@ -1394,11 +1452,12 @@ void Aview()
 
 void Asys1(int n)
 {
-    cout << endl << "\t\t\t拍卖流程：" << endl << "\t\t\t竞拍者\t\t出价" << endl;
+    cout << endl << "\t\t\t拍卖流程：" << endl << "\t\t\t" << setw(15) << left
+         << "竞拍者" << setw(15) << left<< "出价" << endl;
     loadOBJ();
     for(int i = 0; i < M; i++){
         if(n == OBJ[i].Ordin){
-            cout <<"\t\t\t" << ACT[OBJ[i].Who].Uname << "\t\t" << OBJ[i].Price << endl;
+            cout << "\t\t\t" << setw(15) << left << ACT[OBJ[i].Who].Uname << setw(15) << left << OBJ[i].Price << endl;
         }
     }
 }
