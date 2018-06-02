@@ -1,0 +1,51 @@
+typedef struct auction
+{
+    string name;
+    int sta;  //status
+    string dcr;  //description
+    double price;
+    int Uord;  //username order
+    int ordin; //ordinal
+    int type;
+    int time[6];
+    int whe;  //是否被拍卖
+    int buyer;
+    double fin;
+    int flag;
+}auc;
+
+typedef struct account
+{
+    string Uname;  //Username
+    string pass;  //password
+    string ID;
+    double money;
+}act;
+
+typedef struct object
+{
+    int Ordin;
+    int Who;
+    double Price;
+}obj;
+
+auc AUC[N];
+auc temp;
+obj OBJ[M];
+act ACT[M];  // the 0 is useless and the 1 is the admin
+int qua = 0; //quantity
+int cnt = 0;
+int who;
+int T[6];
+string ad;
+map <string, int> m; //查重
+map <int, string> s;
+map <int, string> w;
+time_t nowtime;
+
+int main()
+{
+    ini();
+    Inter();
+    return 0;
+}
