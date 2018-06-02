@@ -1,0 +1,54 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <conio.h>
+#include <string>
+#include <fstream>
+#include <map>
+#include <utility>
+#include <iomanip>
+#include <ctime>
+#define N 100
+#define M 100
+
+using namespace std;
+
+void ini();
+void Inter();
+void login();
+void loginp();
+void regis();  //register
+void Admin();
+void AdminP();
+void Admin0();
+void Admin1();
+void Admin2();
+void Admin3();
+void Home();
+void show();
+void entry();
+void modif();  //modify
+void del();  //delete
+void sech();  //search object
+void show2();
+void Bsech1();  //二分查找
+void sech2();
+void sech3();
+void sts();  //statistics
+void view();
+void Aview();
+void Asys();  //auction system
+void Asys1(int n);
+void loadACT();  //文件写入
+void loadAUC();
+void loadOBJ();
+void center();
+void Pass();
+void outACT();
+void outAUC();
+void AdminP_();
+void centerP();
+void regisP();
+void systemP();
