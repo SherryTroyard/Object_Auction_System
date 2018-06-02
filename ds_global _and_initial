@@ -49,3 +49,22 @@ int main()
     Inter();
     return 0;
 }
+
+void ini()  //初始化
+{
+    ACT[0].Uname = "无";
+    ACT[0].pass = "NONE";
+    m["ERROR"] = 0;
+    s[0] = "无";
+    s[1] = "电子产品";
+    s[2] = "生活用品";
+    s[3] = "食品";
+    s[4] = "工艺品";
+    s[5] = "其他";
+    ad = "admin";
+    nowtime = time(NULL);
+    w[0] = "未参与拍卖";
+    w[1] = "拍卖中";
+    w[2] = "已被拍出";
+    w[3] = "流拍";
+}
