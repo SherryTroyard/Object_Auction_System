@@ -1,0 +1,85 @@
+void Home()
+{
+    loadAUC();
+    //cout << who << endl;
+    cout << ACT[who].Uname << "，欢迎回来！您的余额为：￥" << ACT[who].money << endl;
+    printf("\n");
+    printf("      @@@@@@` #@@@@@'@@@@@@@@@@@@  @@@@@@@@         #@@@@@#@@     #@@@@@:   @@@@;     @@@@#@@@@@@@@@@@@\n");
+    printf("      @@@@@@` #@@@@@'@@@@@@@@@@@@  @@@@@@@@        @@@@@@@@@@    @@@@@@@@#  @@@@@     @@@@#@@@@@@@@@@@@\n");
+    printf("       @@#       @@.   @@     @@@     @@          @@@     @@@   @@@    .@@+  @@@@:   #@@@.   @@     @@@\n");
+    printf("       +@@  @@+  @@    @@     @@@     @@         .@@       @@  ;@@      .@@  @@@@@   @@@@.   @@     @@@\n");
+    printf("       ;@@  @@@  @@    @@  @@ :@:     @@         @@#       @@  @@'       @@+ @@@@@` +@@@@.   @@  @@ :@:\n");
+    printf("       `@@ #@@@  @@    @@  @@         @@         @@.           @@        '@@ @@@@@@ @@'@@.   @@  @@\n");
+    printf("        @@ @@@@#`@@    @@@@@@         @@         @@.           @@        .@@ @@@ @@;@@ @@.   @@@@@@\n");
+    printf("        @@ @@:@@;@@    @@@@@@         @@      @  @@.           @@        ;@@ @@@ @@@@+ @@.   @@@@@@ \n");
+    printf("        @@#@@ @@#@@    @@  @@  ##     @@     +@@ @@:           @@,       @@@ @@@ `@@@  @@.   @@  @@  ##\n");
+    printf("        @@@@: @@@@#    @@      @@     @@     +@@ #@@           #@@       @@` @@@  @@#  @@.   @@      @@\n");
+    printf("        @@@@  ,@@@;    @@      @@     @@     +@@  @@+      @@:  @@#     @@@  @@@       @@.   @@      @@\n");
+    printf("        @@@@   @@@.  @@@@@@@@@@@@  :@@@@@@@@@@@@  ,@@@;  ;@@@`  .@@@, ;@@@  +@@@@+   @@@@@,@@@@@@@@@@@@\n");
+    printf("        '@@;   @@@   @@@@@@@@@@@@  @@@@@@@@@@@@@   `@@@@@@@@`    `@@@@@@@   @@@@@@   @@@@@@@@@@@@@@@@@@\n");
+    printf("                                                     '@@'         `+@'\n");
+    printf("\n");
+    printf("                                            ------------------------\n");
+    printf("                                                    功能菜单\n");
+    printf("                                            ------------------------\n");
+    printf("                                                     请选择：\n");
+    printf("                                               1.竞拍物品管理中心\n"); //原查看竞拍物品信息
+    printf("                                                 2.物品竞拍中心\n");
+    printf("                                                   3.修改密码\n");
+    printf("                                                   4.用户登出\n");
+    printf("                                            ------------------------\n");
+    char n;
+    n = getch();
+    switch(n)
+    {
+        case '1': system("cls"); center(); break;
+        case '2': system("cls"); sech(); break;
+        case '3': system("cls"); Pass(); break;
+        case '4': system("cls"); Inter(); break;
+    }
+}
+
+void Pass()
+{
+    string p1, p2, p3;
+    ofstream out;
+    cout << "请输入旧密码:";
+    cin >> p1;
+    cout << endl;
+    if(p1 == ACT[who].pass){
+        cout << "请输入新密码：";
+        cin >> p2;
+        cout << endl;
+        cout << "确认新密码：";
+        cin >> p3;
+        cout << endl;
+        if(p3 == p2){
+            cout << "密码修改成功！" << endl;
+            ACT[who].pass = p2;
+            out.open("Un.txt", ios::trunc);
+            out.close();
+            out.open("Un.txt", ios::app);
+            for(int i = 1; i < M; i++){
+                if(ACT[i].Uname.empty()) break;
+                out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+            }
+            out.close();
+            loadACT();
+            getch();
+            system("cls");
+            Home();
+        }
+        else{
+            cout << "两次密码不一致，请按Enter键返回上级菜单。" << endl;
+            getch();
+            system("cls");
+            Home();
+        }
+    }
+    else{
+        cout << "密码错误，请按Enter键返回上级菜单。" << endl;
+        getch();
+        system("cls");
+        Home();
+    }
+}
