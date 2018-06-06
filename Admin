@@ -202,6 +202,9 @@ void view()
              << "\t\t\t\t\t拍得价：" << AUC[i].fin << endl;
         printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
                    AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
+        cout.fill(' ');
+        Asys1(i + 1);
+        cout << endl;
     }
     cout << endl << "请按Enter键返回。" << endl;
     getch();
