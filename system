@@ -1,0 +1,178 @@
+void systemP()
+{
+    printf("\n");
+    printf("                  @@@@`+`  #@@+  .@@@:    @@@@`+`  @@@@@@@@@@; @@@@@@@@@@ :@@@     @@@\n");
+    printf("                 @@@@@@@@  @@@@  @@@@@   @@@@@@@@  @@@@@@@@@@; @@@@@@@@@@ @@@@    :@@@@\n");
+    printf("                @@+   @@@   @@+   @@.   @@+   @@@  @@  @@  ;@;  @@     @@  @@@+   @@@+\n");
+    printf("                @@     @@    @@  #@@    @@     @@  @@  @@  ;@;  @@     @@  @@@@  `@@@+\n");
+    printf("                @@;    #`    .@@`@@     @@;    #`  @@  @@  ;@;  @@  @@ #'  @@@@' @@;@+\n");
+    printf("                `@@@@#`       @@@@.     `@@@@#`    .@  @@   @   @@@@@@     @@ @@ @@.@+\n");
+    printf("                  @@@@@@       @@@        @@@@@@       @@       @@@@@@     @@ @@@@;.@+\n");
+    printf("                     .@@@      @@            .@@@      @@       @@  @@     @@ `@@@ .@+\n");
+    printf("                @.     @@      @@       @.     @@      @@       @@     @@  @@  @@+ .@+\n");
+    printf("               .@@     @@      @@      .@@     @@      @@       @@     @@  @@      .@+\n");
+    printf("               .@@@@@@@@#   `@@@@@@@   .@@@@@@@@#    @@@@@@@   @@@@@@@@@@ @@@@@  :@@@@# \n");
+    printf("                @.@@@@@+    `@@@@@@@    @.@@@@@+     @@@@@@@   @@@@@@@@@@ @@@@@  :@@@@#\n");
+    printf("\n");
+}
+
+void sech() //实际竞拍页面
+{
+    Asys();
+    systemP();
+    printf("\n                                            ------------------------\n");
+    printf("                                                  物品竞拍中心\n");
+    printf("                                            ------------------------\n");
+    printf("                                                     请选择：\n");
+    //printf("                                                   1.我的竞拍\n");
+    printf("                                                 1.我拍得的物品\n");
+    printf("                                                2.按物品编号查找\n");
+    printf("                                                3.按物品名称查找\n");
+    printf("                                                4.按物品类型查找\n");
+    printf("                                              5.查看所有可竞拍物品\n");
+    printf("                                                 6.返回功能菜单\n");
+    printf("                                            ------------------------\n");
+    char n;
+    n = getch();
+    switch(n)
+    {
+        //case '1': system("cls"); mine(); break;
+        case '1': system("cls"); show2(); break;
+        case '2': system("cls"); Bsech1(); break;
+        case '3': system("cls"); sech2(); break;
+        case '4': system("cls"); sech3(); break;
+        case '5': system("cls"); Aview(); break;
+        case '6': system("cls"); Home(); break;
+    }
+}
+
+void show2()
+{
+    loadAUC();
+    cout.fill(' ');
+    cout << endl << setw(10) << left << "物品编号" << setw(15) << left << "物品名称" << setw(10) << left
+         << "新旧程度" << setw(10) << left << "物品类型"<< setw(20) << left << "物品描述"
+         << setw(10) << left << "物品估价" << endl;
+    for(int i = 0; i < qua; i++) {
+        if(AUC[i].buyer == who) {
+            cout << setw(10) << left << AUC[i].ordin << setw(15) << left << AUC[i].name
+                 << setw(10) << left << AUC[i].sta << setw(10) << left << AUC[i].type
+                 << setw(20) << left << AUC[i].dcr << setw(10) << left << AUC[i].price << endl;
+        }
+    }
+    cout << endl << "按Enter键返回上级菜单" << endl;
+    getch();
+    system("cls");
+    sech();
+}
+
+void Aview()
+{
+    loadAUC();
+    int f = 0;
+    double MAX = 0;
+    for(int i = 0; i < N; i++){
+        if(AUC[i].name.empty()) break;
+        if(AUC[i].Uord == who) continue;
+        if(AUC[i].whe == 1){
+            //cout << "\t\t\t\t\t\t用户编号：" << setw(4) << setfill('0') << AUC[i].Uord << endl
+            cout << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+                 << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+                 << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+                 << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+                 << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+                 << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
+                 << "\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl;
+            printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
+                   AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
+            cout << endl;
+            f = 1;
+        }
+    }
+    if(f){
+        cout << endl << "按S键选择物品，按ESC键返回上级菜单。";
+        char c;
+        c = getch();
+        if(c == 27) {
+            //getch();
+            system("cls");
+            sech();
+        }
+        if(c == 'S') {
+            cout << endl << "请输入物品编号：" ;
+            int s, a;
+            cin >> s;
+            for(int i = 0; i < M; i++) {
+                if(OBJ[i].Ordin == s) {
+                    MAX = max(MAX, OBJ[i].Price);
+                }
+            }
+            int l = 0, h = qua, mid;
+            while(l <= h) {
+                mid = (l + h)/2;
+                if(AUC[mid].ordin == s) {
+                    a = mid;
+                    break;
+                } else if(s < AUC[mid].ordin)
+                    h = mid - 1;
+                else
+                    l = mid + 1;
+            }
+            Asys1(s);
+            cout << endl << "按P键出价，按ESC键返回上级菜单。" << endl;
+            c = getch();
+            if(c == 'P') {
+                double p;
+                cout << "请输入出价：" << endl;
+                cin >> p;
+                //
+                if(p >= AUC[a].price) {
+                    if(p > MAX) {
+                        ofstream fp;
+                        fp.open("uction.txt", ios::app);
+                        fp << AUC[a].ordin << " " << who << " " << p << endl;
+                        fp.close();
+                        loadOBJ();
+                        cout << "出价成功！按Enter键返回上级菜单。" << endl;
+                        getch();
+                        system("cls");
+                        sech();
+                    } else {
+                        cout << "出价低于最低出价！按Enter键返回上级菜单。" << endl;
+                        getch();
+                        system("cls");
+                        sech();
+                    }
+                } else {
+                    cout << "出价低于竞拍价！按Enter键返回上级菜单。" << endl;
+                    getch();
+                    system("cls");
+                    sech();
+                }
+            }
+            if(c == 27) {
+                //getch();
+                system("cls");
+                sech();
+            }
+            else {
+                cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                getch();
+                system("cls");
+                sech();
+            }
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            sech();
+        }
+    }
+        //cout << endl << "请按Enter键返回。" << endl;
+    else
+        cout << endl << "无可竞拍物品，请按Enter键返回。" << endl;
+    getch();
+    system("cls");
+    sech();
+}

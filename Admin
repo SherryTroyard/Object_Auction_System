@@ -1,0 +1,213 @@
+void AdminP_()
+{
+    printf("\n");
+    printf("                            @@@@@     `@@@@@+`    @@@`    `@@@  @@@@@@@@  #@@#   @@@@.\n");
+    printf("                           @@@@@@+    @@@@@@@@@   @@@@    @@@@ .@@@@@@@@. @@@@  +@@@@@\n");
+    printf("                              @@@@     ;@;  .@@@   @@@    @@@      @@      ;@@@   .@+\n");
+    printf("                             :@@@@.    ;@;    @@;  @@@@  @@@@      @@      ;@@@'  .@+\n");
+    printf("                             @@``@@    ;@;     @@  @@@@  @@@@      @@      ;@;@@  .@+\n");
+    printf("                             @@  @@    ;@;     @@  @@+@#+@#@@      @@      ;@;+@@ .@+\n");
+    printf("                            @@:  ;@#   ;@;     @@  @@ @@@@ @@      @@      ;@; @@,.@+\n");
+    printf("                            @@@@@@@@   ;@;     @@  @@ #@@@ @@      @@      ;@; `@@.@+\n");
+    printf("                           ;@@@@@@@@;  ;@;    `@@  @@  @@  @@      @@      ;@;  #@@@+\n");
+    printf("                           @@      @@  ;@;   `@@`  @@      @@      @@      ;@;   @@@+\n");
+    printf("                         ,@@@@@  @@@@@#@@@@@@@@+ `@@@@@  @@@@@.`@@@@@@@@` +@@@@; .@@+ \n");
+    printf("                         ,@@@@@  @@@@@#@@@@@@@`  `@@@@@  @@@@@.`@@@@@@@@` +@@@@;  @@+\n");
+    printf("\n");
+}
+
+void AdminP()
+{
+    AdminP_();
+    printf("                                            ------------------------\n");
+    printf("                                                   管理员模式\n");
+    printf("                                            ------------------------\n");
+    printf("                                                     请选择：\n");
+    printf("                                                1.用户名搜索用户\n");
+    printf("                                                 2.编号搜索用户\n");
+    printf("                                                 3.查看用户列表\n");
+    printf("                                                 4.查看物品列表\n");
+    printf("                                                  5.管理员登出\n");
+    printf("                                            ------------------------\n");
+}
+
+void Admin0()
+{
+    Asys();
+    cout << "已取得管理员权限。" << endl;
+        AdminP();
+    char n;
+    n = getch();
+        switch(n)
+        {
+            case '1': system("cls"); Admin1(); break;
+            case '2': system("cls"); Admin2(); break;
+            case '3': system("cls"); Admin3(); break;
+            case '4': system("cls"); view(); break;
+            case '5': system("cls"); Inter(); break;
+        }
+}
+
+void Admin1()
+{
+    string n;
+    AdminP_();
+    printf("     ---------------------------------------------------------------------------------------------\n\n");
+    cout << "                                             请输入待查找的用户名:";
+    cin >> n;
+    int f = 0;
+    double m;
+    char c;
+    for(int i = 1; i < M; i++){
+        if(n == ACT[i].Uname){
+            f = 1;
+            cout << endl << "                                             搜索到该用户，信息如下：" << endl
+                 << "                                             用户编号：" << setw(4) << setfill('0') << i << endl
+                 << "                                             用户名：" << ACT[i].Uname << endl
+                 << "                                             用户余额：" << ACT[i].money << endl
+                 << "                                             （按P充值，按ESC返回上级菜单）" << endl;
+            c = getch();
+            if(c == 'P'){
+                cout << "                                             请输入充值金额（整数）：";
+                cin >> m;
+                ACT[i].money += m;
+                ofstream out;
+                out.open("Un.txt", ios::trunc);
+                out.close();
+                out.open("Un.txt", ios::app);
+                for(int i = 1; i < M; i++) {
+                    if(ACT[i].Uname.empty())
+                        break;
+                    else
+                        out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+                }
+                out.close();
+                loadACT();
+                cout << "                                             充值完成，请按Enter键返回上级菜单。" << endl;
+                getch();
+                system("cls");
+                Admin0();
+            }
+            if(c == 27){
+                //getch();
+                system("cls");
+                Admin0();
+            }
+            else {
+                cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                getch();
+                system("cls");
+                Admin0();
+            }
+        }
+    }
+    if(!f){
+        cout << endl << "                                \t*用户不存在！请按Enter键返回上级菜单*" << endl;
+        getch();
+        system("cls");
+        Admin0();
+    }
+}
+
+void Admin2()
+{
+    int n, m;
+    AdminP_();
+    printf("     ---------------------------------------------------------------------------------------------\n\n");
+    cout << "                                             请输入待查找的用户编号:";
+    cin >> n;
+    char c;
+    if(ACT[n].Uname.empty()){
+        cout << endl << "                                \t*用户不存在！请按Enter键返回上级菜单。" << endl;
+        getch();
+        system("cls");
+        Admin0();
+    }
+    else{
+        cout << endl << "                                             搜索到该用户，信息如下：" << endl
+             << "                                             用户编号：" << setw(4) << setfill('0') << n << endl
+             << "                                             用户名：" << ACT[n].Uname << endl
+             << "                                             用户余额：" << ACT[n].money << endl
+             << "                                             （按P充值，按ESC返回上级菜单）" << endl;
+        c = getch();
+        if(c == 'P') {
+            cout << "                                             请输入充值金额（整数）：";
+            cin >> m;
+            ACT[n].money += m;
+            ofstream out;
+            out.open("Un.txt", ios::trunc);
+            out.close();
+            out.open("Un.txt", ios::app);
+            for(int i = 1; i < M; i++) {
+                if(ACT[i].Uname.empty())
+                    break;
+                else
+                    out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+            }
+            out.close();
+            loadACT();
+            cout << "                                             *充值完成，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            Admin0();
+        }
+        if(c == 27) {
+            system("cls");
+            Admin0();
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            Admin0();
+        }
+    }
+}
+
+void Admin3()
+{
+    loadACT();
+    cout.fill(' ');
+    cout << endl << setw(20) << left << "用户编号" << setw(20) << left << "用户名"
+    << setw(20) << left << "用户密码" << setw(30) << left << "用户余额" << endl;
+    for(int i = 1; i < M; i++){
+        if(ACT[i].Uname.empty()) break;
+        cout << right << setw(4) << setfill('0') << i;
+        cout.fill(' ');
+        cout << setw(20) << right << ACT[i].Uname << setw(23) << right << ACT[i].pass
+             << setw(20) << right << ACT[i].money << endl;
+    }
+    cout << endl << "请按Enter键返回。" << endl;
+    getch();
+    system("cls");
+    Admin0();
+}
+
+void view()
+{
+    Asys();
+    loadAUC();
+    cout << endl;
+    for(int i = 0; i < N; i++){
+        if(AUC[i].name.empty()) break;
+        cout << "\t\t\t\t\t用户编号：" << setw(4) << setfill('0') << AUC[i].Uord << endl
+             << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+             << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+             << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+             << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+             << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+             << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
+             << "\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl
+             << "\t\t\t\t\t拍得者：" << ACT[AUC[i].buyer].Uname << endl
+             << "\t\t\t\t\t拍得价：" << AUC[i].fin << endl;
+        printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n\n", AUC[i].time[0], AUC[i].time[1],
+                   AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
+        cout.fill(' ');
+        Asys1(i + 1);
+        cout << endl;
+    }
+    cout << endl << "请按Enter键返回。" << endl;
+    getch();
+    system("cls");
+    Admin0();
+}

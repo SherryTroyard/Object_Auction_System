@@ -1,0 +1,96 @@
+void Asys()
+{
+    loadAUC();
+    double MAX = 0;
+    time_t now;
+    struct tm *local;
+    //cout << qua << endl <<endl;
+    for(int i = 0; i < qua; i++){
+        time(&now);
+        local = localtime(&now);
+        //cout << local->tm_year + 1900 << " " << local->tm_mon + 1 << " " << local->tm_mday << " "
+             //<< local->tm_hour << " " <<local->tm_min << " " << local->tm_sec << endl << endl;
+        if(AUC[i].whe == 1){
+                /*
+            if(local->tm_year + 1900 >= AUC[i].time[0] && local->tm_mon + 1 >= AUC[i].time[1] &&
+               local->tm_mday >= AUC[i].time[2] && local->tm_hour >= AUC[i].time[3] &&
+               local->tm_min >= AUC[i].time[4] && local->tm_sec >= AUC[i].time[5])
+                AUC[i].whe = 2;*/
+                if(local->tm_year+1900==AUC[i].time[0]) {
+                if(local->tm_mon+1==AUC[i].time[1]) {
+                    if(local->tm_mday==AUC[i].time[2]) {
+                        if(local->tm_hour==AUC[i].time[3]) {
+                            if(local->tm_min==AUC[i].time[4]) {
+                                if(local->tm_sec>=AUC[i].time[5])
+                                    AUC[i].whe=2;
+                            } else if(local->tm_min>AUC[i].time[4])
+                                AUC[i].whe=2;
+                        } else if(local->tm_hour>AUC[i].time[3])
+                            AUC[i].whe=2;
+                    } else if(local->tm_mday>AUC[i].time[2])
+                        AUC[i].whe=2;
+                } else if(local->tm_mon+1>AUC[i].time[1])
+                    AUC[i].whe=2;
+            } else if(local->tm_year+1990>AUC[i].time[0])
+                AUC[i].whe=2;
+        }
+        //cout << "$" << AUC[i].whe << endl;
+    }
+    outAUC();
+    loadAUC();
+    //
+    //cout << endl;
+    for(int i = 0; i < qua; i++){
+        //cout << AUC[i].whe << endl;
+        if(AUC[i].whe == 2){
+            for(int j = 0; j < M; j++) {
+                if(OBJ[j].Ordin == AUC[i].ordin)
+                    MAX = max(MAX, OBJ[j].Price);
+            }
+            if(MAX == 0)
+                AUC[i].whe = 3;
+            else{
+                //cout << i << " " << MAX << "\n";
+                AUC[i].fin = MAX;
+                //cout << "*" << i << " " << AUC[i].fin << "\n";
+                for(int j = 0; j < M; j++) {
+                    if(OBJ[j].Price == MAX) {
+                        AUC[i].buyer = OBJ[j].Who;
+                        if(AUC[i].flag == 0) {
+                            if(ACT[AUC[i].buyer].money >= MAX){
+                                ACT[AUC[i].buyer].money -= MAX;
+                                AUC[i].flag = 1;
+                            }
+                            else{
+                                AUC[i].whe = 3;
+                                AUC[i].buyer = 0;
+                                AUC[i].fin = 0;
+                            }
+                        }
+                        break;
+                    }
+                    //cout << i << " " << AUC[i].buyer << " " << OBJ[j].Who << "\n";
+                    //break;
+                }
+            }
+        MAX = 0;
+        }
+    }
+    outAUC();
+    loadAUC();
+    outACT();
+    loadACT();
+}
+
+void Asys1(int n)
+{
+    cout << endl << "\t\t\t拍卖流程：" << endl << "\t\t\t" << setw(15) << left
+         << "竞拍者" << setw(15) << left<< "出价" << endl;
+    loadOBJ();
+    cout.fill(' ');
+    for(int i = 0; i < M; i++){
+        if(n == OBJ[i].Ordin){
+            cout << "\t\t\t" << setw(15) << left << ACT[OBJ[i].Who].Uname << setw(15) << left << OBJ[i].Price << endl;
+        }
+    }
+}

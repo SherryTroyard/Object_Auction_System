@@ -1,0 +1,91 @@
+void loadACT()
+{
+    ifstream in;
+    in.open("Un.txt");
+    for(int i = 1; i < M; i++){
+        in >> ACT[i].Uname;
+        m[ACT[i].Uname] = i;
+        ACT[i].ID = i;
+        in >> ACT[i].pass;
+        in >> ACT[i].money;
+        cnt++;
+        if(ACT[i].Uname.empty()) break;
+    }
+    //cout << cnt << endl;
+    in.close();
+}
+
+void outACT()
+{
+    ofstream out1;
+    out1.open("Un.txt", ios::trunc);
+    out1.close();
+    out1.open("Un.txt", ios::app);
+    for(int i = 1; i < M; i++) {
+        if(ACT[i].Uname.empty())
+            break;
+        else
+            out1 << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+    }
+    out1.close();
+}
+
+void loadAUC()
+{
+    ifstream in;
+    in.open("Obj.txt");
+    for(int i = 0; i < N; i++){
+        in >> AUC[i].name;
+        in >> AUC[i].Uord;
+        in >> AUC[i].sta;
+        in >> AUC[i].type;
+        in >> AUC[i].dcr;
+        in >> AUC[i].price;
+        in >> AUC[i].ordin;
+        in >> AUC[i].whe;
+        in >> AUC[i].time[0];
+        in >> AUC[i].time[1];
+        in >> AUC[i].time[2];
+        in >> AUC[i].time[3];
+        in >> AUC[i].time[4];
+        in >> AUC[i].time[5];
+        in >> AUC[i].buyer;
+        in >> AUC[i].fin;
+        in >> AUC[i].flag;
+        qua = max(qua, AUC[i].ordin);
+        if(AUC[i].name.empty()) break;
+    }
+    in.close();
+}
+
+void outAUC()
+{
+    ofstream out;
+    out.open("Obj.txt", ios::trunc);
+    out.close();
+    out.open("Obj.txt", ios::app);
+    for(int i = 0; i < N; i++) {
+        if(AUC[i].name.empty())
+            break;
+        else
+            out << AUC[i].name << " " << AUC[i].Uord << " " << AUC[i].sta << " " << AUC[i].type
+                << " " << AUC[i].dcr << " " << AUC[i].price <<  " " << AUC[i].ordin <<  " " << AUC[i].whe << " "
+                << AUC[i].time[0] << " " << AUC[i].time[1] << " " << AUC[i].time[2] << " " << AUC[i].time[3]
+                << " " << AUC[i].time[4] << " " << AUC[i].time[5] << " " << AUC[i].buyer << " " << AUC[i].fin
+                << " " << AUC[i].flag << endl;
+    }
+    out.close();
+}
+
+void loadOBJ()
+{
+    ifstream in;
+    in.open("uction.txt");
+    for(int i = 0; i < M; i++){
+        in >> OBJ[i].Ordin;
+        in >> OBJ[i].Who;
+        in >> OBJ[i].Price;
+        if(OBJ[i].Ordin == 0) break;
+    }
+    in.close();
+}

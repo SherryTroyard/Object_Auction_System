@@ -1,0 +1,376 @@
+void centerP()
+{
+    printf("\n");
+    printf("                    @@@+@@ @@@`   :@@@@@`    @@@.@@@+     :@@@@@`      #@@@:@@@;   ;@@@@`\n");
+    printf("                    @@@@@@@@@@@   @@@@@@@.   @@@@@@@@@    @@@@@@@.    @@@@@@@@@@  @@@@@@@# \n");
+    printf("                     @@. @@+ @@        .@@    @@@   @@         .@@   @@@   @@@   @@@   :@@.\n");
+    printf("                     @@  @@  @@    `+@#;@@    @@    @@     `+@#;@@   @@     @@   @@     ;@@\n");
+    printf("                     @@  @@  @@   @@@@@@@@    @@    @@    @@@@@@@@   @@     @@   @@@@@@@@@@ \n");
+    printf("                     @@  @@  @@  @@@, `;@@    @@    @@   @@@, `;@@   @@     @@   @@@@@@@@@@\n");
+    printf("                     @@  @@  @@  @@    :@@    @@    @@   @@    :@@   @@.   +@@   @@. \n");
+    printf("                    @@@@ @@@ @@@,@@@@@@@@@@,.@@@@. @@@@, @@@@@@@@@@, .@@@@@@@@   .@@@@@@@@@\n");
+    printf("                    @@@@ @@@ @@@, @@@@@ @@@,.@@@@. @@@@,  @@@@@ @@@,  .@@@@@@@    `@@@@@@@;\n");
+    printf("                                                                            @@\n");
+    printf("                                                                           #@@\n");
+    printf("                                                                       @@@@@@\n");
+    printf("                                                                       #@@@;\n");
+    printf("\n");
+}
+
+void center()
+{
+    cout << ACT[who].Uname << "，欢迎回来！您的余额为：￥" << ACT[who].money << endl << endl;
+    centerP();
+    printf("                                            ------------------------\n");
+    printf("                                                竞拍物品管理中心\n");
+    printf("                                            ------------------------\n");
+    printf("                                                     请选择：\n");
+    printf("                                               1.我的竞拍物品信息\n");
+    printf("                                               2.录入竞拍物品信息\n");
+    printf("                                               3.修改竞拍物品信息\n");
+    printf("                                               4.删除竞拍物品信息\n");
+    printf("                                               5.统计竞拍物品信息\n");
+    printf("                                                 6.返回功能菜单\n");
+    printf("                                            ------------------------\n");
+    char n;
+    n = getch();
+    switch(n)
+    {
+        case '1': system("cls"); show(); break;
+        case '2': system("cls"); entry(); break;
+        case '3': system("cls"); modif(); break;
+        case '4': system("cls"); del(); break;
+        case '5': system("cls"); sts(); break;
+        //case 7: system("cls"); view(); break;
+        case '6': system("cls"); Home(); break;
+    }
+}
+
+void show()
+{
+    loadAUC();
+    int f = 0;
+    double mn;
+    cout << endl;
+    for(int i = 0; i < N; i++){
+        if(AUC[i].Uord == who){
+            cout << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+                 << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+                 << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+                 << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+                 << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+                 << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl
+                 << "\t\t\t\t\t物品状态：" << w[AUC[i].whe] << endl;
+            if(AUC[i].whe == 1)
+                printf("\t\t\t\t\t拍卖截止日期：%d-%02d-%02d %02d:%02d:%02d\n", AUC[i].time[0], AUC[i].time[1],
+                   AUC[i].time[2], AUC[i].time[3],AUC[i].time[4], AUC[i].time[5]);
+            cout << endl;
+            f = 1;
+        }
+    }
+    if(f == 1){
+        cout << endl << "\t\t\t\t*按S键提交物品至拍卖平台,按ESC键返回*" << endl;
+        char c;
+        c = getch();
+        loadAUC();
+        if(c == 'S') {
+            if(ACT[who].money == 0) {
+                cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
+                getch();
+                system("cls");
+                center();
+            }
+        else{
+            cout << endl << "\t\t\t\t请输入物品编号：";
+            int s, a;
+            cin >> s;
+            int l = 0, h = qua, mid;
+            while(l <= h) {
+                mid = (l + h)/2;
+                if(s == AUC[mid].ordin) {
+                    a = mid;
+                    break;
+                } else if(s < AUC[mid].ordin)
+                    h = mid - 1;
+                else
+                    l = mid + 1;
+            }
+            if(AUC[a].whe == 0){
+                    mn = 0.2*AUC[a].price;
+                    cout << endl << "\t\t\t\t你需要支付" << mn << "元（起始竞拍价的20%）作为佣金" << endl
+                         << "\t\t\t\t确认请按Y，返回菜单请按ESC" << endl;  //重新输入估价请按A+Enter，
+                    c = getch();
+                    if(c == 'Y') {
+                        if(ACT[who].money >= mn) {
+                            ACT[who].money -= mn;
+                            ofstream out;
+                            out.open("Un.txt", ios::trunc);
+                            out.close();
+                            out.open("Un.txt", ios::app);
+                            for(int i = 1; i < M; i++) {
+                                if(ACT[i].Uname.empty())
+                                    break;
+                                else
+                                    out << ACT[i].Uname << " " << ACT[i].pass << " " << ACT[i].money << endl;
+                            }
+                            out.close();
+                            loadACT();
+                            AUC[a].whe = 1;
+                            cout << "\t\t请输入物品竞拍截止日期：（如2018-05-20-23:59:59）：";
+                            scanf("%d-%d-%d-%d:%d:%d", &AUC[a].time[0],&AUC[a].time[1],&AUC[a].time[2],
+                                  &AUC[a].time[3],&AUC[a].time[4],&AUC[a].time[5]);
+                            cout << "\t\t\t\t*提交成功！*" << endl;
+                            outAUC();
+                            loadAUC();
+                            cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
+                            getch();
+                            system("cls");
+                            center();
+                        } else {
+                            cout << endl << "\t\t\t\t*余额不足，请联系管理员充值后再来（按Enter键返回上级菜单）*" << endl;
+                            getch();
+                            system("cls");
+                            center();
+                        }
+                    }
+                    if(c == 27) {
+                        system("cls");
+                        center();
+                    }
+                    else {
+                        cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                        getch();
+                        system("cls");
+                        center();
+                    }
+            }
+            else if(AUC[a].whe == 1)
+                cout << "\t\t\t\t物品已处于拍卖状态！" << endl;
+            else
+                cout << "\t\t\t\t物品已卖出！" << endl;
+            cout << endl << "\t\t\t\t*请按Enter键返回*" << endl;
+            getch();
+            system("cls");
+            center();
+            }
+        }
+        if(c == 27) {
+            system("cls");
+            center();
+        }
+        else{
+            cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+            getch();
+            system("cls");
+            center();
+        }
+    }
+    if(!f){
+        cout << "\t\t\t\t\t      没有竞拍物品信息。" << endl;
+        cout << endl << "\t\t\t\t*请按Enter键返回*" << endl;
+        getch();
+        system("cls");
+        center();
+    }
+}
+
+void entry()
+{
+    ofstream fp;
+    fp.open("Obj.txt", ios::app);
+    string n, d;
+    int st, ty;
+    char cho;
+    double pr, mn;
+    cout << endl << "\t\t\t\t物品名称：";
+    cin >> n;
+    cout << endl << "\t\t\t\t物品的新旧程度(0-100)：";
+    cin >> st;
+    cout << endl << "\t\t\t\t物品类型（1.电子产品；2.生活用品；3.食品；4.工艺品；5.其他）：";
+    cin >> ty;
+    cout << endl << "\t\t\t\t物品描述：";
+    cin >> d;
+    cout << endl << "\t\t\t\t对物品的估价（将作为起始竞拍价/￥）：";
+    cin >> pr;
+    ++qua;
+    fp << n << " " << who << " " << st << " " << ty << " " << d << " " << pr << " " << qua
+       << " 0 0 0 0 0 0 0 0 0 0" << endl;
+    fp.close();
+    cout << endl << "\t\t\t\t*已确认，请按Enter键返回上级菜单*" << endl;
+    getch();
+    system("cls");
+    center();
+}
+
+void modif()
+{
+    loadAUC();
+    int o;
+    string n_, d_;
+    int s_, ty_;
+    double p_, m;
+    cout << endl << "\t\t\t\t请输入你需要修改的物品编号：";
+    cin >> o;
+    int f = 0;
+    cout << endl;
+    for(int i = 0; i < N; i++){
+        if(AUC[i].ordin == o && AUC[i].Uord == who){
+            f = 1;
+            if(AUC[i].whe != 0){
+                cout << endl << "\t\t\t\t*你已失去修改物品的权限!*" << endl << endl;
+                break;
+            }
+            else{
+                cout << "\t\t\t\t原物品信息：" << endl
+                 << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+                 << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+                 << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+                 << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+                 << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+                 << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl << endl;
+                cout << endl << "\t\t*请选择要修改的信息：1.名称；2.新旧程度；3.类型；4.描述；5.估价*" << endl;
+                char c;
+                c = getch();
+                switch(c)
+                {
+                    case '1':
+                        cout << endl << "\t请修改：" << "1.物品名称：";
+                        cin >> n_;
+                        AUC[i].name = n_; break;
+                    case '2':
+                        cout << endl << "\t请修改：" << "\t2.物品的新旧程度(0-100):";
+                        cin >> s_;
+                        AUC[i].sta = s_; break;
+                    case '3':
+                        cout << endl <<"\t请修改：" << "\t3.物品类型（1.电子产品；2.生活用品；3.食品；4.工艺品；5.其他）：";
+                        cin >> ty_;
+                        AUC[i].type = ty_; break;
+                    case '4':
+                        cout << endl << "\t请修改：" << "\t4.物品描述：";
+                        cin >> d_;
+                        AUC[i].dcr = d_; break;
+                    case '5':
+                        cout << endl << "\t请修改：" << "\t5.物品估价：￥";
+                        cin >> p_;
+                        AUC[i].price = p_; break;
+                    default:
+                        system("cls");
+                        modif();
+                }
+                cout << endl << "\t\t\t\t\t*修改成功！*" << endl;
+                outAUC();
+                break;
+            }
+        }
+    }
+    if(!f){
+        cout << endl << "\t\t\t\t*物品不存在*" << endl;
+    }
+    cout << endl << "\t\t\t\t*请按Enter键返回上级菜单*" << endl;
+    loadAUC();
+    getch();
+    system("cls");
+    center();
+}
+
+void del()
+{
+    loadAUC();
+    int o, t;
+    cout << endl << "\t\t\t\t请输入你需要删除的物品编号：";
+    cin >> o;
+    int f = 0;
+    for(int i = 0; i < N; i++){
+        if(AUC[i].ordin == o && AUC[i].Uord == who){
+            f = 1;
+            if(AUC[i].whe != 0) {
+                cout << endl << "\t\t\t\t*你已失去删除物品的权限!*" << endl << endl;
+                break;
+            }
+            else{
+                //t = AUC[i].price*0.2;
+                cout << endl << "\t\t\t\t原物品信息：" << endl
+                 << "\t\t\t\t\t物品编号：" << AUC[i].ordin << endl
+                 << "\t\t\t\t\t物品名称：" << AUC[i].name << endl
+                 << "\t\t\t\t\t新旧程度：" << AUC[i].sta << endl
+                 << "\t\t\t\t\t物品类型：" << s[AUC[i].type] << endl
+                 << "\t\t\t\t\t物品描述：" << AUC[i].dcr << endl
+                 << "\t\t\t\t\t物品估价：￥" << AUC[i].price << endl << endl;
+                cout << "\t\t\t\t*确认删除请按Y键，返回请按ESC键*" << endl;
+                char c;
+                c = getch();
+                if(c == 'Y'){
+                    for(int j = i; j < N - 1; j++) {
+                        AUC[j].name = AUC[j + 1].name;
+                        AUC[j].sta = AUC[j + 1].sta;  //status
+                        AUC[j].type = AUC[j + 1].type;
+                        AUC[j].dcr = AUC[j + 1].dcr;  //description
+                        AUC[j].price = AUC[j + 1].price;
+                        AUC[j].Uord = AUC[j + 1].Uord;  //username order
+                        AUC[j].ordin = AUC[j + 1].ordin; //ordinal
+                        AUC[j].whe = AUC[j + 1].whe;
+                        AUC[j].time[0] = AUC[j + 1].time[0];
+                        AUC[j].time[1] = AUC[j + 1].time[1];
+                        AUC[j].time[2] = AUC[j + 1].time[2];
+                        AUC[j].time[3] = AUC[j + 1].time[3];
+                        AUC[j].time[4] = AUC[j + 1].time[4];
+                        AUC[j].time[5] = AUC[j + 1].time[5];
+                        AUC[j].buyer = AUC[j + 1].buyer;
+                        AUC[j].fin = AUC[j + 1].fin;
+                        AUC[j].flag = AUC[j + 1].flag;
+                    }
+                    outAUC();
+                    cout << endl << "\t\t\t\t\t*删除成功*" << endl;
+                }
+                else if(c == 27){
+                    system("cls");
+                    center();
+                }
+                else{
+                    cout << endl << endl << "\t                            *键入错误，请按Enter键返回上级菜单*" << endl;
+                    getch();
+                    system("cls");
+                    center();
+                }
+            }
+        }
+    }
+    if(!f){
+        cout << "\t\t\t\t*物品不存在*" << endl << endl;
+    }
+    cout << endl << "\t\t\t\t*请按Enter键返回上级菜单*" << endl;
+    loadAUC();
+    loadACT();
+    getch();
+    system("cls");
+    center();
+}
+
+void sts()
+{
+    //loadAUC();
+    int cnt1, cnt2, cnt3, cnt4;
+    cnt1 = cnt2 = cnt3 = cnt4 = 0;
+    for(int i = 0; i < qua; i++){
+        if(AUC[i].Uord == who){
+            if(AUC[i].whe == 0)
+                cnt1++;
+            if(AUC[i].whe == 1)
+                cnt2++;
+            if(AUC[i].whe == 2)
+                cnt3++;
+        }
+        if(who == AUC[i].buyer){
+            cnt4++;
+        }
+    }
+    cout << endl <<"\t\t\t\t\t未拍出物品数：" << cnt1 << endl
+         << endl << "\t\t\t\t\t竞价中物品数：" << cnt2 << endl
+         << endl << "\t\t\t\t\t已拍出物品数：" << cnt3 << endl
+         << endl << "\t\t\t\t\t成功竞拍物品数：" << cnt4 << endl
+         << endl;
+    cout << endl << "\t\t\t\t\t*按Enter键返回上级菜单*" << endl;
+    getch();
+    system("cls");
+    center();
+}
